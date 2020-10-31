@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">MyTJournal</string>
+    <string name="tab_text_1">Лента</string>
+    <string name="tab_text_2">Профиль</string>
+</resources>
