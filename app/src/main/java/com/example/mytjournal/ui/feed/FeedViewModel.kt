@@ -15,7 +15,9 @@ class FeedViewModel : ViewModel() {
 
     fun loadPosts() {
         viewModelScope.launch(Dispatchers.IO) {
-            posts.postValue(TJournalRepository().getPosts(count, offset))
+            val gettedPosts = TJournalRepository().getPosts(count, offset)
+            if (gettedPosts != null)
+                posts.postValue(gettedPosts)
             offset += count
         }
     }
