@@ -4,10 +4,7 @@ import com.example.mytjournal.data.model.PostsResponse
 import com.example.mytjournal.data.model.UserResponse
 import kotlinx.coroutines.Deferred
 import retrofit2.Response
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface TJournalApi {
     @GET("subsite/{id}/timeline/{sorting}")
@@ -18,8 +15,9 @@ interface TJournalApi {
         @Query("offset") offset: Int
     ): Deferred<Response<PostsResponse>>
 
-    @POST("auth_qr")
+    @POST("auth/qr")
     fun auth(
-        @Query("token") token: String
+        @Header("token") token: String
     ): Deferred<Response<UserResponse>>
+
 }

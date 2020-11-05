@@ -1,5 +1,6 @@
 package com.example.mytjournal.ui.profile
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.mytjournal.data.model.User
@@ -9,11 +10,22 @@ import kotlinx.coroutines.launch
 
 class ProfileViewModel : ViewModel() {
 
-    var user: User? = null
+    val user = MutableLiveData<User?>()
 
     fun auth(token: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            user = TJournalRepository().auth(token)
+            try {
+                val result = TJournalRepository().auth(token)
+                if (result.isSuccessful && result.body()?.result != null) {
+                    user.postValue(result.body()?.result)
+                } else {
+                    // error
+                    user.postValue(null)
+                }
+            } catch (e: Exception) {
+//                user.postValue(User(e.toString(), ""))
+                user.postValue(null)
+            }
         }
     }
 }

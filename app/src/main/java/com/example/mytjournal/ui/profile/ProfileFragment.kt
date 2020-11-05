@@ -1,13 +1,20 @@
 package com.example.mytjournal.ui.profile
 
 import android.Manifest
+import android.accounts.Account
+import android.accounts.AccountManager
+import android.accounts.AccountManagerCallback
+import android.accounts.AccountManagerFuture
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.content.DialogInterface
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,11 +25,15 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.budiyev.android.codescanner.CodeScanner
 import com.budiyev.android.codescanner.CodeScannerView
 import com.budiyev.android.codescanner.DecodeCallback
+import com.bumptech.glide.Glide
 import com.example.mytjournal.R
+import com.example.mytjournal.data.model.User
 
 
 class ProfileFragment : Fragment() {
@@ -39,7 +50,7 @@ class ProfileFragment : Fragment() {
     private lateinit var ivAva: ImageView
     private lateinit var scannerView: CodeScannerView
     private lateinit var scanner: CodeScanner
-    private var isLoggedIn: Boolean = false
+    private var isLogin: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,10 +68,6 @@ class ProfileFragment : Fragment() {
         scanner = CodeScanner(activity as Context, scannerView)
         scanner.decodeCallback = DecodeCallback {
             viewModel.auth(it.text)
-
-            activity?.runOnUiThread {
-                Toast.makeText(activity, it.text, Toast.LENGTH_LONG).show()
-            }
         }
 
         btAuth.setOnClickListener {
@@ -72,8 +79,17 @@ class ProfileFragment : Fragment() {
             }
         }
 
-        checkIsLoggedIn()
-        if (isLoggedIn) {
+        btExit.setOnClickListener {
+            deleteUser()
+            openLogin()
+        }
+
+        viewModel.user.observe(this as LifecycleOwner, Observer {
+            showUser(it)
+        })
+
+        checkIsLogin()
+        if (isLogin) {
             btAuth.visibility = View.GONE
         } else {
             btExit.visibility = View.GONE
@@ -121,7 +137,9 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    private fun showMessageOKCancel(
+
+
+    fun showMessageOKCancel(
         message: String,
         okListener: DialogInterface.OnClickListener
     ) {
@@ -131,6 +149,34 @@ class ProfileFragment : Fragment() {
             .setNegativeButton("Отмена", null)
             .create()
             .show()
+    }
+
+    fun showUser(user: User?) {
+        if (user != null) {
+            openUser()
+            saveUser(user)
+            tvName.setText(user.name)
+            Glide.with(this).load(user.ava).into(ivAva)
+        } else {
+            openLogin()
+            Toast.makeText(activity, "Не удалось авторизоваться", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun saveUser(user: User?) {
+        val sPref = activity?.getPreferences(MODE_PRIVATE)
+        val editor = sPref?.edit()
+        editor?.putString("name", user?.name)
+        editor?.putString("ava", user?.ava)
+        editor?.apply()
+    }
+
+    fun deleteUser() {
+        val sPref = activity?.getPreferences(MODE_PRIVATE)
+        val editor = sPref?.edit()
+        editor?.remove("name")
+        editor?.remove("ava")
+        editor?.apply()
     }
 
     fun checkPermission(): Boolean {
@@ -171,8 +217,15 @@ class ProfileFragment : Fragment() {
         btExit.visibility = View.GONE
     }
 
-    fun checkIsLoggedIn() {
-        isLoggedIn = false
+    fun checkIsLogin() {
+        val sPref = activity?.getPreferences(MODE_PRIVATE);
+        val name = sPref?.getString("name", null)
+        val ava = sPref?.getString("ava", "") ?: ""
+        if (name != null) {
+            isLogin = true
+            viewModel.user.postValue(User(name, ava))
+        } else
+            isLogin = false
     }
 
 }

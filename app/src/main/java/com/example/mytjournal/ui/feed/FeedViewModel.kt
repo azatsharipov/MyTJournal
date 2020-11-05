@@ -7,6 +7,7 @@ import com.example.mytjournal.data.model.Post
 import com.example.mytjournal.data.repository.TJournalRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.lang.Exception
 
 class FeedViewModel : ViewModel() {
     val posts = MutableLiveData<MutableList<Post>>()
@@ -15,10 +16,15 @@ class FeedViewModel : ViewModel() {
 
     fun loadPosts() {
         viewModelScope.launch(Dispatchers.IO) {
-            val gettedPosts = TJournalRepository().getPosts(count, offset)
-            if (gettedPosts != null)
-                posts.postValue(gettedPosts)
-            offset += count
+            try {
+                val result = TJournalRepository().getPosts(count, offset)
+                if (result.isSuccessful && result.body() != null) {
+                    posts.postValue(result.body()?.result)
+                    offset += count
+                }
+            } catch (e: Exception) {
+                // error
+            }
         }
     }
 
