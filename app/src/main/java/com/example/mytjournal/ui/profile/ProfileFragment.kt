@@ -156,7 +156,7 @@ class ProfileFragment : Fragment() {
             openUser()
             saveUser(user)
             tvName.setText(user.name)
-            Glide.with(this).load(user.ava).into(ivAva)
+            Glide.with(this).load(user.avatar_url).into(ivAva)
         } else {
             openLogin()
             Toast.makeText(activity, "Не удалось авторизоваться", Toast.LENGTH_SHORT).show()
@@ -167,7 +167,7 @@ class ProfileFragment : Fragment() {
         val sPref = activity?.getPreferences(MODE_PRIVATE)
         val editor = sPref?.edit()
         editor?.putString("name", user?.name)
-        editor?.putString("ava", user?.ava)
+        editor?.putString("ava", user?.avatar_url)
         editor?.apply()
     }
 

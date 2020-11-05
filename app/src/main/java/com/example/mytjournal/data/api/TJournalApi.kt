@@ -15,9 +15,9 @@ interface TJournalApi {
         @Query("offset") offset: Int
     ): Deferred<Response<PostsResponse>>
 
-    @POST("auth/qr")
+    @GET("user/me")
     fun auth(
-        @Header("token") token: String
+        @Header("X-Device-Token") token: String
     ): Deferred<Response<UserResponse>>
 
 }

@@ -8,6 +8,5 @@ class UserResponse (
 
 class User (
     val name: String,
-    @SerializedName("avatar_url")
-    val ava: String
+    val avatar_url: String
 )

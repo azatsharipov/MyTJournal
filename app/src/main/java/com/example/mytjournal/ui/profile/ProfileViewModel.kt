@@ -19,11 +19,9 @@ class ProfileViewModel : ViewModel() {
                 if (result.isSuccessful && result.body()?.result != null) {
                     user.postValue(result.body()?.result)
                 } else {
-                    // error
                     user.postValue(null)
                 }
             } catch (e: Exception) {
-//                user.postValue(User(e.toString(), ""))
                 user.postValue(null)
             }
         }
