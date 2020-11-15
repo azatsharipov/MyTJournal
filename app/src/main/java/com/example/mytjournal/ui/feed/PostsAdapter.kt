@@ -19,15 +19,6 @@ import com.google.android.exoplayer2.ui.PlayerView
 class PostsAdapter(var posts: MutableList<Post>) :
     RecyclerView.Adapter<PostsAdapter.VideoPostsViewHolder>() {
 
-    lateinit var player: SimpleExoPlayer
-
-/*
-    class PostsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var tvTitle: TextView = view.findViewById(R.id.tv_post_item_title)
-        var ivContent: ImageView = view.findViewById(R.id.iv_post_item)
-    }
-*/
-
     class VideoPostsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var tvTitle: TextView = view.findViewById(R.id.tv_videopost_item_title)
         var vvContent: PlayerView = view.findViewById(R.id.vv_videopost_item)
