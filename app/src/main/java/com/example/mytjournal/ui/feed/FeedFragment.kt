@@ -83,8 +83,7 @@ class FeedFragment : Fragment() {
     fun showPosts(posts: MutableList<Post>) {
         val startPos = postsAdapter.posts.size
         postsAdapter.posts.addAll(posts)
-        postsAdapter.notifyDataSetChanged()
-//        postsAdapter.notifyItemRangeChanged(startPos, posts.size)
+        postsAdapter.notifyItemRangeInserted(startPos, posts.size)
     }
 
 }
