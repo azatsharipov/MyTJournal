@@ -33,7 +33,6 @@ class PostsAdapter(var posts: MutableList<Post>) :
         var vvContent: PlayerView = view.findViewById(R.id.vv_videopost_item)
         lateinit var mediaItem: MediaItem
         lateinit var player: SimpleExoPlayer
-        var volume: Float = 0f
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoPostsViewHolder {
@@ -55,13 +54,11 @@ class PostsAdapter(var posts: MutableList<Post>) :
         holder.vvContent.hideController()
         holder.vvContent.setControllerVisibilityListener {
             if (holder.player.volume == 0f)
-                holder.player.volume = holder.volume
+                holder.player.volume = 1f
             else {
-                holder.volume = holder.player.volume
                 holder.player.volume = 0f
             }
         }
-        holder.volume = holder.player.volume
         holder.player.volume = 0f
         holder.player.prepare();
         holder.vvContent.player = holder.player
