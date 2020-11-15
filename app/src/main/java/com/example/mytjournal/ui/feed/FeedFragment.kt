@@ -69,6 +69,11 @@ class FeedFragment : Fragment() {
         return view
     }
 
+    override fun onPause() {
+        super.onPause()
+        postsAdapter.notifyDataSetChanged()
+    }
+
     fun startLoading() {
         isLoading = true
         progressBar.visibility = View.VISIBLE

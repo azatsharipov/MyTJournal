@@ -60,8 +60,6 @@ class PostsAdapter(var posts: MutableList<Post>) :
                 holder.volume = holder.player.volume
                 holder.player.volume = 0f
             }
-            holder.vvContent.player = holder.player
-//            holder.vvContent.hideController()
         }
         holder.volume = holder.player.volume
         holder.player.volume = 0f
