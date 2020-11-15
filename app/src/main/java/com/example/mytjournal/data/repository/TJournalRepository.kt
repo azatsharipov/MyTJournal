@@ -11,7 +11,7 @@ class TJournalRepository {
     suspend fun getPosts(count: Int = 15, offset: Int = 0): Response<PostsResponse> {
         val api = TJournalApiFactory.api
         val result = api
-            .getPosts("1", "top/all", count, offset)
+            .getPosts("237832", "new", count, offset)
             .await()
         return result
     }
